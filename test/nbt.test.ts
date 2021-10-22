@@ -14,8 +14,8 @@ describe("NBT", () => {
   let alice: SignerWithAddress;
   let bob: SignerWithAddress;
   let tom: SignerWithAddress;
-  let capped:BigNumber =ethers.utils.parseEther('10000000');
-  let firstMint:BigNumber  =ethers.utils.parseEther('5500000');
+  let capped:BigNumber =ethers.utils.parseEther('10000000000');
+  let firstMint:BigNumber  =ethers.utils.parseEther('5500000000');
   let secondMint:BigNumber =capped.sub(firstMint);
   
   before(async () => {
@@ -23,9 +23,7 @@ describe("NBT", () => {
       "NanoByteToken"
     );
     [owner, alice, bob, tom] = await ethers.getSigners();
-    contract = await NBTFactory.deploy(
-      capped
-    );
+    contract = await NBTFactory.deploy();
   });
 
   it("Should the right cap", async () => {
@@ -156,5 +154,6 @@ describe("NBT", () => {
     await contract.transfer(tom.address, 100);
     expect(await contract.getCurrentVotes(tom.address)).to.equal(500);
    })
+
 
 });

@@ -1,0 +1,8 @@
+node_modules
+
+# hardhat
+cache
+artifacts
+
+# secrets
+secret.json
