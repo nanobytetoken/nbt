@@ -200,7 +200,7 @@ contract BEP20 is Context, IBEP20, Ownable {
      *
      * - `msg.sender` must be the token owner
      */
-    function mint(uint256 amount) public virtual onlyOwner returns (bool) {
+    function mint(uint256 amount) external virtual onlyOwner returns (bool) {
         _mint(_msgSender(), amount);
         return true;
     }

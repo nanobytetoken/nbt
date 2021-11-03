@@ -9,23 +9,23 @@ contract NanoByteToken is BEP20Capped {
   
     constructor() BEP20('Nano Byte Token','NBT') BEP20Capped(10000000000000000000000000000) {}
 
-    function mint(uint256 _amount) public onlyOwner override returns (bool) {
+    function mint(uint256 _amount) external onlyOwner override returns (bool) {
         _mint(_msgSender(), _amount);
         _moveDelegates(address(0), _delegates[_msgSender()], _amount);
         return true;
     }
 
-    function mint(address _to, uint256 _amount) public onlyOwner {
+    function mint(address _to, uint256 _amount) external onlyOwner {
         _mint(_to, _amount);
         _moveDelegates(address(0), _delegates[_to], _amount);
     }
 
-    function burn(uint256 _amount) public virtual {
+    function burn(uint256 _amount) external virtual {
         _burn(_msgSender(), _amount);
         _moveDelegates(_delegates[_msgSender()], address(0), _amount);
     }
 
-    function burnFrom(address _from, uint256 _amount) public onlyOwner{
+    function burnFrom(address _from, uint256 _amount) external onlyOwner{
         _burnFrom(_from, _amount);
         _moveDelegates(_delegates[_from], address(0), _amount);
     }
