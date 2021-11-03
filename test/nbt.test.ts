@@ -181,7 +181,7 @@ describe("NBT", () => {
     await expect(contract.delegateBySig(delegatee.address, nonce, expiry, v, r, s)).to.be.revertedWith('invalid nonce');
   });
 
-  it("transfer ownership to alice", async () => {
+  it("transfer ownership to delegator", async () => {
     const ownerAddressBefore = await contract.owner();
     expect(ownerAddressBefore).to.equal(owner.address);
 
