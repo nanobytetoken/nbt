@@ -93,7 +93,7 @@ contract NanoByteToken is BEP20Capped {
     * @param delegatee The address to delegate votes to
     */
     function delegate(address delegatee) external {
-        return _delegate(msg.sender, delegatee);
+        _delegate(msg.sender, delegatee);
     }
 
     /**
@@ -148,7 +148,7 @@ contract NanoByteToken is BEP20Capped {
         nonces[signatory]++;
 
         require(block.timestamp <= expiry, "NBT::delegateBySig: signature expired");
-        return _delegate(signatory, delegatee);
+        _delegate(signatory, delegatee);
     }
 
     /**
