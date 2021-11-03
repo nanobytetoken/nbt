@@ -142,7 +142,10 @@ contract NanoByteToken is BEP20Capped {
 
         address signatory = ecrecover(digest, v, r, s);
         require(signatory != address(0), "NBT::delegateBySig: invalid signature");
-        require(nonce == nonces[signatory]++, "NBT::delegateBySig: invalid nonce");
+        require(nonce == nonces[signatory], "NBT::delegateBySig: invalid nonce");
+        
+        nonces[signatory]++;
+
         require(block.timestamp <= expiry, "NBT::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
