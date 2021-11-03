@@ -1,9 +1,9 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { beforeEach } from "mocha";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, Signature,utils } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 chai.use(solidity);
@@ -14,6 +14,8 @@ describe("NBT", () => {
   let alice: SignerWithAddress;
   let bob: SignerWithAddress;
   let tom: SignerWithAddress;
+  let delegator: SignerWithAddress;
+  let delegatee: SignerWithAddress;
   let capped:BigNumber =ethers.utils.parseEther('10000000000');
   let firstMint:BigNumber  =ethers.utils.parseEther('5500000000');
   let secondMint:BigNumber =capped.sub(firstMint);
@@ -22,7 +24,7 @@ describe("NBT", () => {
     const NBTFactory = await ethers.getContractFactory(
       "NanoByteToken"
     );
-    [owner, alice, bob, tom] = await ethers.getSigners();
+    [owner, alice, bob, tom, delegator, delegatee ] = await ethers.getSigners();
     contract = await NBTFactory.deploy();
   });
 
@@ -156,4 +158,79 @@ describe("NBT", () => {
    })
 
 
+   it("delegates on behalf of the signature", async () => {
+      const nonce = (await contract.nonces(delegator.address)).toString();
+      const expiry = 10e9;
+      const { v, r, s } = await signDelegation(contract.address, network.config.chainId!, delegator.address, delegatee.address, nonce, expiry);
+      const actualDelegationBefore = await contract.delegates(delegator.address);
+      expect(actualDelegationBefore).to.equal('0x0000000000000000000000000000000000000000');
+      const tx = await contract.delegateBySig(delegatee.address, nonce, expiry, v, r, s);
+      const actualDelegationAfter = await contract.delegates(delegator.address);
+      expect(actualDelegationAfter).to.equal(delegatee.address);
+
+      await expect(Promise.resolve(tx))
+      .to.emit(contract, 'DelegateChanged')
+      .withArgs(delegator.address, '0x0000000000000000000000000000000000000000', delegatee.address);
+
+  });
+  
+  it("reverts delegate signature the nonce is bad ", async () => {
+    const nonce = 9;
+    const expiry = 10e9;
+    const { v, r, s } = await signDelegation(contract.address, network.config.chainId!, delegator.address, delegatee.address, nonce, expiry);
+    await expect(contract.delegateBySig(delegatee.address, nonce, expiry, v, r, s)).to.be.revertedWith('invalid nonce');
+  });
+
+  it("transfer ownership to alice", async () => {
+    const ownerAddressBefore = await contract.owner();
+    expect(ownerAddressBefore).to.equal(owner.address);
+
+    await contract.transferOwnership(delegator.address);
+    
+    const ownerAddressAfter = await contract.owner();
+    expect(ownerAddressAfter).to.equal(delegator.address);
+
+  });
 });
+
+async function signDelegation(
+  contractAddress:string,
+  chainId: number,
+  delegatorAddr: string,
+  delegateeAddr: string,
+  nonce: number,
+  expiry: number
+): Promise<Signature> {
+  const EIP712Domain = {
+    name: 'Nano Byte Token',
+    chainId: chainId,
+    verifyingContract: contractAddress,
+  };
+  const types = {
+    Delegation: [
+      { name: "delegatee", type: "address" },
+      { name: "nonce", type: "uint256" },
+      { name: "expiry", type: "uint256" },
+    ],
+  };
+  const value = { delegatee: delegateeAddr, nonce: nonce, expiry: expiry };
+  const digest = utils._TypedDataEncoder.hash(EIP712Domain, types, value);
+  return getSigningKey(delegatorAddr).signDigest(digest);
+}
+
+function getSigningKey(address: string): utils.SigningKey {
+  const { initialIndex, count, path, mnemonic } = network.config.accounts as {
+    initialIndex: number;
+    count: number;
+    path: string;
+    mnemonic: string;
+  };
+  const parentNode = utils.HDNode.fromMnemonic(mnemonic).derivePath(path);
+  for (let index = initialIndex; index < initialIndex + count; index++) {
+    const node = parentNode.derivePath(index.toString());
+    if (node.address == address) {
+      return new utils.SigningKey(node.privateKey);
+    }
+  }
+  throw `No private key found for address ${address}`;
+}
