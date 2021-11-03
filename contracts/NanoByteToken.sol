@@ -76,8 +76,9 @@ contract NanoByteToken is BEP20Capped {
     event DelegateVotesChanged(address indexed delegate, uint previousBalance, uint newBalance);
 
     /**
-     * @notice Delegate votes from `msg.sender` to `delegatee`
+     * @notice Gets associated delegatee given the delegator`
      * @param delegator The address to get delegatee for
+     * @return The delegator of the delegate
      */
     function delegates(address delegator)
         external
