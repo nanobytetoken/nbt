@@ -89,6 +89,14 @@ describe("NBT", () => {
       expect(await contract.balanceOf(alice.address)).to.equal(900);
   })
 
+  it('burn should be failed execed balance', async () => {
+    await expect(contract.connect(alice).burn(10000))
+        .to.be.revertedWith('BEP20: burn amount exceeds balance');
+
+    await expect(contract.connect(bob).burn(100))
+        .to.be.revertedWith('BEP20: burn amount exceeds balance');
+  })
+
   it('approve', async () => {
     await contract.connect(alice).approve(owner.address, 100);
     let allowance = await contract.allowance(alice.address,owner.address);
@@ -108,7 +116,18 @@ describe("NBT", () => {
    })
 
    it('burn form allowance failed amount exceeds allowance', async () => {
+    let allowance = await contract.allowance(alice.address,owner.address);
+    expect(allowance).to.equal(200);
+
     await expect(contract.burnFrom(alice.address,250))
+    .to.be.revertedWith('BEP20: burn amount exceeds allowance');
+   })
+   
+   it('burn form allowance failed not have allowance', async () => {
+    let allowance = await contract.allowance(alice.address,bob.address);
+    expect(allowance).to.equal(0);
+
+    await expect(contract.connect(bob).burnFrom(alice.address,150))
     .to.be.revertedWith('BEP20: burn amount exceeds allowance');
    })
 
