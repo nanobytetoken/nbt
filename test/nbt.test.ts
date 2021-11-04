@@ -2,7 +2,6 @@ import { expect } from "chai";
 import { ethers, network } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
-import { beforeEach } from "mocha";
 import { BigNumber, Contract, Signature,utils } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
@@ -65,9 +64,13 @@ describe("NBT", () => {
     expect(await contract.totalSupply()).to.equal(capped);
   });
 
+
   it("Mint over Max cap", async function(){
     await expect(contract['mint(address,uint256)'](owner.address,firstMint))
         .to.be.revertedWith('BEP20Capped: cap exceeded');
+    
+    await expect(contract['mint(address,uint256)'](owner.address,1))
+    .to.be.revertedWith('BEP20Capped: cap exceeded');
   });
 
 
@@ -87,6 +90,7 @@ describe("NBT", () => {
   it('burn should be success', async () => {
       await contract.connect(alice).burn(100);
       expect(await contract.balanceOf(alice.address)).to.equal(900);
+      expect(await contract.totalSupply()).to.equal(capped.sub(100));
   })
 
   it('burn should be failed execed balance', async () => {
@@ -134,6 +138,7 @@ describe("NBT", () => {
    it('burn form allowance', async () => {
     await contract.burnFrom(alice.address,150);
     expect(await contract.balanceOf(alice.address)).to.equal(750);
+    expect(await contract.totalSupply()).to.equal(capped.sub(100+150));
    })
 
    it('allowance should be deduct after burn form', async () => {
