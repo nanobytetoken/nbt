@@ -20,12 +20,12 @@ contract NanoByteToken is BEP20Capped {
         _moveDelegates(address(0), _delegates[_to], _amount);
     }
 
-    function burn(uint256 _amount) external virtual {
+    function burn(uint256 _amount) external {
         _burn(_msgSender(), _amount);
         _moveDelegates(_delegates[_msgSender()], address(0), _amount);
     }
 
-    function burnFrom(address _from, uint256 _amount) external onlyOwner{
+    function burnFrom(address _from, uint256 _amount) external{
         _burnFrom(_from, _amount);
         _moveDelegates(_delegates[_from], address(0), _amount);
     }
