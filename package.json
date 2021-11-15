@@ -8,7 +8,9 @@
     "test": "npx hardhat test",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network testnet",
+    "deploy-verify:testnet": "npx hardhat run scripts/deploy-verify.ts --network testnet",
     "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet",
+    "deploy-verify:mainnet": "npx hardhat run scripts/deploy-verify.ts --network mainnet",
     "sol-merger":"npx sol-merger  contracts/NanoByteToken.sol ./build"
   },
   "keywords": [],
