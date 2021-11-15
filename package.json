@@ -8,7 +8,8 @@
     "test": "npx hardhat test",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network testnet",
-    "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet"
+    "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet",
+    "sol-merger":"npx sol-merger  contracts/NanoByteToken.sol ./build"
   },
   "keywords": [],
   "author": "NanoByte",
@@ -25,6 +26,7 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.1",
     "hardhat": "^2.6.6",
+    "sol-merger": "^3.1.0",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
   }
