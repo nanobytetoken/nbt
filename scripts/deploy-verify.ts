@@ -11,6 +11,11 @@ async function main() {
     );
   });
 
+  // verify contract
+  await hre.run("verify:verify", {
+    address: contract.address,
+    constructorArguments: [],
+  });
 }
 
 

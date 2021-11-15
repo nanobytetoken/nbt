@@ -4,13 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx harhat test"
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy:testnet": "npx hardhat run scripts/deploy.ts --network testnet",
+    "deploy-verify:testnet": "npx hardhat run scripts/deploy-verify.ts --network testnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet",
+    "deploy-verify:mainnet": "npx hardhat run scripts/deploy-verify.ts --network mainnet",
+    "sol-merger":"npx sol-merger  contracts/NanoByteToken.sol ./build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "NanoByte",
+  "homepage": "https://www.nanobytetoken.io",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^2.1.7",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "^4.3.2",
     "@types/chai": "^4.2.22",
@@ -20,6 +28,7 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.1",
     "hardhat": "^2.6.6",
+    "sol-merger": "^3.1.0",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
   }
