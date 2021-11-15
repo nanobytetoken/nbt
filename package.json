@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "npx harhat test",
-    "test": "npx harhat test",
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network testnet",
     "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet"
