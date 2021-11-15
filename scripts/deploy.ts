@@ -1,11 +1,9 @@
 import hre, {ethers} from 'hardhat';
 
-const maxSupply = 10000000;
-const decimalPlaces = 18;
 
 async function main() {
   const factory = await ethers.getContractFactory("NanoByteToken");
-  const contract = await factory.deploy(ethers.utils.parseUnits(maxSupply.toString(), decimalPlaces));
+  const contract = await factory.deploy();
 
   await contract.deployed().then((contract) => {
     console.log(
@@ -16,7 +14,7 @@ async function main() {
   // verify contract
   await hre.run("verify:verify", {
     address: contract.address,
-    constructorArguments: [ethers.utils.parseUnits(maxSupply.toString(), decimalPlaces)],
+    constructorArguments: [],
   });
 }
 
