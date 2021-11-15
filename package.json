@@ -11,8 +11,8 @@
     "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "NanoByte",
+  "homepage": "https://www.nanobytetoken.io",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.7",
