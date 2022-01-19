@@ -7,7 +7,7 @@ import "./libs/BEP20Capped.sol";
 contract NanoByteToken is BEP20Capped {
     using SafeMath for uint256;
   
-    constructor() BEP20('Nano Byte Token','NBT') BEP20Capped(10000000000000000000000000000) {}
+    constructor() BEP20('NanoByte Token','NBT') BEP20Capped(10000000000000000000000000000) {}
 
     function mint(uint256 _amount) external onlyOwner override returns (bool) {
         _mint(_msgSender(), _amount);
