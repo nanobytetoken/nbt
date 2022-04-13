@@ -36,5 +36,13 @@ export default {
     // Obtain one at https://bscscan.com/
     apiKey: bscscanApiKey
   },
-  solidity: "0.8.4",
+  solidity: {
+    version:  "0.8.13",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  }
 };

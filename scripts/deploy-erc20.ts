@@ -2,7 +2,7 @@ import hre, {ethers} from 'hardhat';
 
 
 async function main() {
-  const factory = await ethers.getContractFactory("contracts/NanoByteTokenERC20.sol:NanoByteToken");
+  const factory = await ethers.getContractFactory("contracts/erc20/NanoByteToken.sol:NanoByteToken");
   const contract = await factory.deploy();
 
   await contract.deployed().then((contract) => {
